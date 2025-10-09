@@ -4,7 +4,55 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Triângulo com Seno, Cosseno e Tangente</title>
-  <link rel="stylesheet" href="style.css">
+     <style>*{
+ margin: 0;
+ padding: 0;
+ font-family: Verdana, Geneva, Tahoma, sans-serif;
+ font-size: 15px;
+ text-align: center;
+}
+body{ 
+    background-color: antiquewhite;
+}
+
+.in{
+     background-color: rgba(76, 76, 253, 0.39);
+     margin: 1%;
+     margin-top: 2%;
+     font-size: 150%;
+}
+.in::placeholder{
+    color: black;
+
+}
+.in:focus{
+      background-color: rgba(76, 76, 253, 0.39);
+
+}
+.bo{
+    text-align: center;
+    margin: 1.8%;
+    background-color:  orange;
+    border-radius: 5px;
+    border-color: black;
+    padding: 6%;
+    font-size: 100%;
+}
+
+#canvas{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+}
+
+#voltar{
+    font-size: 120%;
+    text-align: left;
+    display: block;
+    text-decoration: none;
+    color: red;
+}</style>
   <script>
         function caucularangulo(){
             let co= parseFloat(document.getElementById("co").value);
