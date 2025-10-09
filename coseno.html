@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triângulo com Seno, Cosseno e Tangente</title>
+    <link rel="stylesheet" href="style.css">
+       <script>
+        function caucularangulo(){
+            let Ca= parseFloat(document.getElementById("ca").value);
+            let hip= parseFloat(document.getElementById("hip").value);
+            let cos = Ca/hip
+            let ancos = Math.acos(cos)
+            let angulo = ancos*(180/Math.PI)
+            alert("O angulo é de "+ angulo.toFixed(0)+ " ou "+ cos.toFixed(3) );
+        }
+        function caucularCA(){
+            let angulo = parseFloat(document.getElementById("angulos").value);
+            angulo = (angulo*(Math.PI/180))
+            let cos = Math.cos(angulo).toFixed(3)
+            let hip = parseFloat(document.getElementById("hip").value);
+            let Ca = hip*cos
+            alert("O cateto adjacente mede ≈ "+ Ca.toFixed(2))
+        }
+
+        function caucularHIP(){
+              let angulo = parseFloat(document.getElementById("angulos").value);
+            angulo = (angulo*(Math.PI/180))
+            let cos = Math.cos(angulo).toFixed(3)
+            let ca = parseFloat(document.getElementById("ca").value)
+            let hip = Ca/cos
+            alert("A sua hipotenusa é de ≈ "+ hip.toFixed(2))
+        }
+            function desenharTriangulo1() {
+      let angulo = parseFloat(document.getElementById("angulos").value);
+      let ca = parseFloat(document.getElementById("ca").value);
+      let hip = parseFloat(document.getElementById("hip").value);
+
+      if (!angulo ){
+      angulo = Ca/hip
+      angulo = angulo*(180/Math.PI)
+      }
+      if (!ca && hip && angulo) ca = hip * Math.cos(angulo * Math.PI / 180);
+      if (!hip && ca && angulo) hip = ca / Math.cos(angulo * Math.PI / 180);
+      if (!ca || !hip) {
+        alert("Preencha pelo menos ângulo e um dos lados (CA ou Hip).");
+        return;
+      }
+
+      
+
+      let co = Math.sqrt(hip ** 2 - ca ** 2);
+      let angulo1 = Math.acos(ca / hip) * (180 / Math.PI);
+      let angulo2 = 90 - angulo1;
+      // --- Desenho ---
+            let canvas = document.getElementById("canvas");
+            let ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Escala
+            let escala = Math.min(canvas.width / (ca * 1.5), canvas.height / (co * 1.5));
+
+            // Pontos
+            let x0 = 50;
+            let y0 = canvas.height - 50;
+            let x1 = x0 + ca * escala;
+            let y1 = y0;
+            let x2 = x0;
+            let y2 = y0 - co * escala;
+
+            // Triângulo
+            ctx.beginPath();
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.closePath();
+            ctx.fillStyle = "#b3d9ff";
+            ctx.fill();
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Medidas
+            ctx.fillStyle = "black";
+            ctx.font = "14px Arial";
+            ctx.fillText("CA = " + ca.toFixed(2), (x0 + x1) / 2 - 20, y0 + 20);
+            ctx.fillText("CO = " + co.toFixed(2), x0 - 50, (y0 + y2) / 2);
+            ctx.fillText("H = " + hip.toFixed(2), (x1 + x2) / 2 + 20, (y1 + y2) / 2);
+
+            // ==== Marcação dos ângulos ====
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "red";
+
+            // Ângulo em (x1, y1) → base direita
+            if (Math.abs(angulo1 - 90) < 0.1) {
+                let t = 20;
+                ctx.beginPath();
+                ctx.moveTo(x1 - t, y1);
+                ctx.lineTo(x1 - t, y1 - t);
+                ctx.lineTo(x1, y1 - t);
+                ctx.stroke();
+            } else {
+                let raio = 35;
+                ctx.beginPath();
+                ctx.arc(x1, y1, raio, Math.PI, Math.PI + (angulo1 * Math.PI / 180), false);
+                ctx.stroke();
+            }
+
+            // Ângulo em (x0, y0) → 90°
+            ctx.beginPath();
+            ctx.moveTo(x0 + 25, y0);
+            ctx.lineTo(x0 + 25, y0 - 25);
+            ctx.lineTo(x0, y0 - 25);
+            ctx.stroke();
+
+            // Ângulo em (x2, y2) → topo esquerdo (hipotenusa)
+            if (Math.abs(angulo2 - 90) < 0.1) {
+                // Quadradinho se for reto
+                let t = 20;
+                ctx.beginPath();
+                ctx.moveTo(x2, y2 + t);
+                ctx.lineTo(x2 + t, y2 + t);
+                ctx.lineTo(x2 + t, y2);
+                ctx.stroke();
+            } else {
+                let raio2 = 35;
+                ctx.beginPath();
+                // Agora o arco é desenhado para dentro do triângulo
+                let startAngle = Math.atan2(y0 - y2, x0 - x2); // direção do cateto vertical
+                let endAngle = startAngle - (angulo2 * Math.PI / 180);
+                ctx.arc(x2, y2, raio2, startAngle, endAngle, true);
+                ctx.stroke();
+            }
+            // ==== Texto dos ângulos ====
+            ctx.fillStyle = "black";
+            ctx.font = "14px Arial";
+            ctx.fillText(angulo1.toFixed(1) + "°", x1 - 55, y1 - 10);
+            ctx.fillText("90°", x0 + 15, y0 - 15);
+            ctx.fillText(angulo2.toFixed(1) + "°", x2 + 10, y2 + 15);
+
+    }
+    </script>
+</head>
+<body>
+    <a id="voltar" href="index.html">Voltar</a>
+    <input class="in" type="text" id="angulos" placeholder="Digite o angulo">
+    <input class="in" type="text" id="ca" placeholder="Digite o cateto adiacente">
+    <input class="in" type="text" id="hip" placeholder="Digite a hipotenusa">
+    <br>
+    <button class="bo" onclick="caucularangulo()">Calcular angulo</button>
+    <button class="bo" onclick="caucularCA()">Calcular cateto adjacente</button>
+    <button class="bo" onclick="caucularHIP()">Calcular hipotenusa</button>
+    <button class="bo" onclick="desenharTriangulo1()">Desenhar Triângulo</button>
+
+  <br><br>
+    <canvas id="canvas" width="500" height="350"></canvas>
+</body>
+</html>

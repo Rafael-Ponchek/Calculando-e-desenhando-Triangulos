@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triângulo com Seno, Cosseno e Tangente</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+      
+        function caucularangulo(){
+            let ca= parseFloat(document.getElementById("ca").value);
+            let co= parseFloat(document.getElementById("co").value);
+            let tan = co/ca
+            let antan = Math.atan(tan)
+            let angulo = antan*(180/Math.PI)
+            alert(angulo.toFixed(0)+ " graus ou "+ tan.toFixed(3));
+
+            
+
+        }
+        function caucularCA(){
+            let angulo = parseFloat(document.getElementById("angulos").value);
+            angulo = (angulo*(Math.PI/180))
+            let tan = Math.tan(angulo).toFixed(3)
+            let co = parseFloat(document.getElementById("co").value);
+            let ca = co/tan
+            alert("O cateto adjacente mede ≈ "+ ca.toFixed(2))
+        }
+
+        function caucularCO(){
+            let angulo = parseFloat(document.getElementById("angulos").value);
+            angulo = (angulo*(Math.PI/180))
+            let tan = Math.tan(angulo).toFixed(3)
+            let ca = parseFloat(document.getElementById("ca").value)
+            let co = ca*tan
+            alert("O cateto oposto mede ≈ "+ co.toFixed(2))
+        }
+                    function desenharTriangulo1() {
+            let ang = parseFloat(document.getElementById("angulos").value);
+            let ca = parseFloat(document.getElementById("ca").value);
+            let co = parseFloat(document.getElementById("co").value);
+
+            // Caso: ângulo e um cateto foram informados
+            if (!isNaN(ang) && ang > 0 && ang < 90) {
+                let rad = ang * Math.PI / 180;
+                if (!isNaN(ca) && isNaN(co)) {
+                    co = Math.tan(rad) * ca;
+                    document.getElementById("co").value = co.toFixed(2);
+                } else if (!isNaN(co) && isNaN(ca)) {
+                    ca = co / Math.tan(rad);
+                    document.getElementById("ca").value = ca.toFixed(2);
+                }
+            }
+
+            // Verificação final
+            if (isNaN(ca) || isNaN(co) || ca <= 0 || co <= 0) {
+                alert("Por favor, insira ângulo + um cateto, ou os dois catetos.");
+                return;
+            }
+
+            // Cálculos principais
+            let hip = Math.sqrt(ca ** 2 + co ** 2);
+            let angulo1 = Math.atan(co / ca) * (180 / Math.PI);
+            let angulo2 = 90 - angulo1;
+
+            if (!isNaN(ang) && ang > 0 && ang < 90) {
+                angulo1 = ang;
+                angulo2 = 90 - ang;
+            }
+
+            // --- Desenho ---
+            let canvas = document.getElementById("canvas");
+            let ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Escala
+            let escala = Math.min(canvas.width / (ca * 1.5), canvas.height / (co * 1.5));
+
+            // Pontos
+            let x0 = 50;
+            let y0 = canvas.height - 50;
+            let x1 = x0 + ca * escala;
+            let y1 = y0;
+            let x2 = x0;
+            let y2 = y0 - co * escala;
+
+            // Triângulo
+            ctx.beginPath();
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.closePath();
+            ctx.fillStyle = "#b3d9ff";
+            ctx.fill();
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Medidas
+            ctx.fillStyle = "black";
+            ctx.font = "14px Arial";
+            ctx.fillText("CA = " + ca.toFixed(2), (x0 + x1) / 2 - 20, y0 + 20);
+            ctx.fillText("CO = " + co.toFixed(2), x0 - 50, (y0 + y2) / 2);
+            ctx.fillText("H = " + hip.toFixed(2), (x1 + x2) / 2 + 20, (y1 + y2) / 2);
+
+            // ==== Marcação dos ângulos ====
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "red";
+
+            // Ângulo em (x1, y1) → base direita
+            if (Math.abs(angulo1 - 90) < 0.1) {
+                let t = 20;
+                ctx.beginPath();
+                ctx.moveTo(x1 - t, y1);
+                ctx.lineTo(x1 - t, y1 - t);
+                ctx.lineTo(x1, y1 - t);
+                ctx.stroke();
+            } else {
+                let raio = 35;
+                ctx.beginPath();
+                ctx.arc(x1, y1, raio, Math.PI, Math.PI + (angulo1 * Math.PI / 180), false);
+                ctx.stroke();
+            }
+
+            // Ângulo em (x0, y0) → 90°
+            ctx.beginPath();
+            ctx.moveTo(x0 + 25, y0);
+            ctx.lineTo(x0 + 25, y0 - 25);
+            ctx.lineTo(x0, y0 - 25);
+            ctx.stroke();
+
+            // Ângulo em (x2, y2) → topo esquerdo (hipotenusa)
+            if (Math.abs(angulo2 - 90) < 0.1) {
+                // Quadradinho se for reto
+                let t = 20;
+                ctx.beginPath();
+                ctx.moveTo(x2, y2 + t);
+                ctx.lineTo(x2 + t, y2 + t);
+                ctx.lineTo(x2 + t, y2);
+                ctx.stroke();
+            } else {
+                let raio2 = 35;
+                ctx.beginPath();
+                // Agora o arco é desenhado para dentro do triângulo
+                let startAngle = Math.atan2(y0 - y2, x0 - x2); // direção do cateto vertical
+                let endAngle = startAngle - (angulo2 * Math.PI / 180);
+                ctx.arc(x2, y2, raio2, startAngle, endAngle, true);
+                ctx.stroke();
+            }
+            // ==== Texto dos ângulos ====
+            ctx.fillStyle = "black";
+            ctx.font = "14px Arial";
+            ctx.fillText(angulo1.toFixed(1) + "°", x1 - 55, y1 - 10);
+            ctx.fillText("90°", x0 + 15, y0 - 15);
+            ctx.fillText(angulo2.toFixed(1) + "°", x2 + 10, y2 + 15);
+
+
+        }
+    </script>
+</head>
+<body>
+    <a id="voltar" href="index.html">Voltar</a>
+    <input class="in" type="number" id="angulos" placeholder="Digite o angulo">
+    <input class="in" type="number" id="ca" placeholder="Digite o cateto adiacente">
+    <input class="in" type="number" id="co" placeholder="Digite o cateto oposto">
+    <button class="bo" onclick="caucularangulo()">Calcular angulo</button>
+    <button class="bo" onclick="caucularCA()">Calcular cateto adjacente</button>
+    <button class="bo" onclick="caucularCO()">Calcular cateto oposto</button>
+    <button class="bo" onclick="desenharTriangulo1()">Desenhar Triângulo</button>
+
+    <br><br>
+    <canvas id="canvas" width="500" height="350"></canvas>
+</body>
+</html>
