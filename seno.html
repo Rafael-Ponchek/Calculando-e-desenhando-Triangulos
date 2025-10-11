@@ -19,7 +19,7 @@ body{
      background-color: rgba(76, 76, 253, 0.39);
      margin: 1%;
      margin-top: 2%;
-     font-size: 150%;
+     font-size: 180%;
 }
 .in::placeholder{
     color: black;
@@ -36,7 +36,7 @@ body{
     border-radius: 5px;
     border-color: black;
     padding: 6%;
-    font-size: 100%;
+    font-size: 160%;
 }
 
 #canvas{
@@ -46,59 +46,104 @@ body{
 
 }
 
-#voltar{
-    font-size: 120%;
-    text-align: left;
-    display: block;
-    text-decoration: none;
-    color: red;
-}</style>
+
+</style>
   <script>
+     alert("Todos números com virgulas devem ser subu=istituidos por pontos <br/> ,=.")
         function caucularangulo(){
             let co= parseFloat(document.getElementById("co").value);
             let hip= parseFloat(document.getElementById("hip").value);
-            let sen = Co/hip
-            let ansen = Math.asin(sen)
-            let angulo = ansen*(180/Math.PI)
-            if((hip=0) || (co=0) ){
-              alert("Por favor adicione o cateto oposto ou a hipotenusa")
+            let altura = parseFloat(document.getElementById("altura").value);
+            co = co+altura;
+            let sen = co/hip;
+            let ansen = Math.asin(sen);
+            let angulo = ansen*(180/Math.PI);
+            if((!hip) || (!co) || co>hip){
+              alert("Por favor adicione valido a altura e/ou a hipotenusa");
             }
             else{
-            alert("O angulo é de "+ angulo.toFixed(0)+ " ou "+ sen.toFixed(3) );
+              if(!altura){
+                alert("Você não colocou sua altura, mas o angulo é de: "+ angulo.toFixed(0)+ "°graus ou "+ sen.toFixed(3));
+              }
+              else{
+                alert("O angulo é de "+ angulo.toFixed(0)+ "°graus ou "+ sen.toFixed(3) );
+              }
             }
         }
         function caucularCO(){
             let angulo = parseFloat(document.getElementById("angulos").value);
-            angulo = (angulo*(Math.PI/180))
-            let sen = Math.sin(angulo).toFixed(3)
+            angulo = (angulo*(Math.PI/180));
+            let altura = parseFloat(document.getElementById("altura").value);
+            let sen = Math.sin(angulo).toFixed(3);
             let hip = parseFloat(document.getElementById("hip").value);
-            let co = hip*sen
-            if ((hip=0) || (sen=0) ){ 
-              alert("Por favor adicione o seno ou a hipotenusa")
+            let co = hip*sen;
+            if ((!hip) || (!angulo) ){ 
+              alert("Por favor adicione o angulo e/ou a hipotenusa");
             }
             else{
-              alert("O cateto adjacente mede ≈ "+ co.toFixed(2))
+              if(!altura){
+              alert("Você não colocou sua altura, mas a altura do triangulo é: "+ co.toFixed(2)+ " m");
+              }
+              else{
+                co = co + altura
+              alert("A altura é de ≈ "+ co.toFixed(2)+ " m");
+              }
             }
         }
 
         function caucularHIP(){
-              let angulo = parseFloat(document.getElementById("angulos").value);
-            angulo = (angulo*(Math.PI/180))
-            let sen = Math.sin(angulo).toFixed(3)
+            let angulo = parseFloat(document.getElementById("angulos").value);
+            angulo = (angulo*(Math.PI/180));
+            let altura = parseFloat(document.getElementById("altura").value);
+            let sen = Math.sin(angulo).toFixed(3);
             let co = parseFloat(document.getElementById("co").value)
-            let hip = co/sen
-             if ((hip=0) || (sen=0) ){ 
-              alert("Por favor adicione o seno ou a hipotenusa")
+            
+             if ((!co) || (!angulo) ){ 
+              alert("Por favor adicione o angulo e/ou a altura");
             }
             else{
-              alert("A sua hipotenusa é de ≈ "+ hip.toFixed(2))
+              if(!altura){
+                let hip = co/sen;
+                alert("Você não colocou sua altura, mas a hipotenusa do triangulo é: "+ hip.toFixed(2)+ " m");
+              }
+              else{
+              co = co + altura;
+              hip = co/sen;
+              alert("A sua hipotenusa é de ≈ "+ hip.toFixed(2)+ " m");
+             }
             }
           }
+
+            function caucularCA(){
+            let hip = parseFloat(document.getElementById("hip").value);
+            let co = parseFloat(document.getElementById("co").value);
+            let altura = parseFloat(document.getElementById("altura").value);
+            if ((!hip) || (!co) ){ 
+              alert("Por favor adicione a alturado objeto e/ou a hipotenusa");
+            }
+            else{
+              if(!altura){
+                let ca = Math.sqrt(hip*hip-co*co)
+              alert("Você não colocou sua altura, mas a base do triangulo é: "+ ca.toFixed(2)+ "m");
+              }
+              else{
+                 co = co + altura;
+                 let ca = Math.sqrt(hip*hip-co+altura*co)
+              alert("A base é de ≈ "+ ca.toFixed(2)+ "m");
+              }
+            }
+        }
           function desenharTriangulo1() {
       let ang = parseFloat(document.getElementById("angulos").value);
       let co = parseFloat(document.getElementById("co").value);
       let hip = parseFloat(document.getElementById("hip").value);
-
+      let altura = parseFloat(document.getElementById("altura").value);
+            if(!altura){
+      alert("Você não colocou a sua altura mas o desenho está a baixo");
+      }
+      else{
+      co = co + altura;
+      }
       // Se o ângulo e um lado forem informados, calcula o outro
       if (!isNaN(ang) && ang > 0 && ang < 90) {
         let rad = ang * Math.PI / 180;
@@ -153,9 +198,9 @@ body{
       // Medidas
       ctx.fillStyle = "black";
       ctx.font = "14px Arial";
-      ctx.fillText("CO = " + co.toFixed(2), x0 - 55, (y0 + y2) / 2);
-      ctx.fillText("CA = " + ca.toFixed(2), (x0 + x1) / 2 - 20, y0 + 20);
-      ctx.fillText("H = " + hip.toFixed(2), (x1 + x2) / 2 + 20, (y1 + y2) / 2);
+      ctx.fillText("CO = " + co.toFixed(2) + " m", x0 - 55, (y0 + y2) / 2);
+      ctx.fillText("CA = " + ca.toFixed(2) + " m", (x0 + x1) / 2 - 20, y0 + 20);
+      ctx.fillText("H = " + hip.toFixed(2) + " m", (x1 + x2) / 2 + 20, (y1 + y2) / 2);
 
       // ==== Marcação dos ângulos ====
       ctx.lineWidth = 2;
@@ -221,12 +266,13 @@ body{
 </script>
 </head>
 <body>
-  <a id="voltar" href="index.html">Voltar</a>
-  <input class="in" type="text" id="angulos" placeholder="Digite o angulo">
-  <input class="in" type="text" id="co" placeholder="Digite o cateto oposto">
-  <input class="in" type="text" id="hip" placeholder="Digite a hipotenusa">
+  <input class="in" type="number" id="altura" placeholder="Digite a sua altura">
+  <input class="in" type="number" id="angulos" placeholder="Digite o angulo">
+  <input class="in" type="number" id="co" placeholder="Digite a altura do objeto (m)">
+  <input class="in" type="number" id="hip" placeholder="Digite a hipotenusa(m)">
   <button class="bo" onclick="caucularangulo()">Calcular angulo</button>
-  <button class="bo" onclick="caucularCO()">Calcular cateto oposto</button>
+  <button class="bo" onclick="caucularCO()">Calcular a altura do objeto</button>
+  <button class="bo" onclick="caucularCA()">Calcular a base</button>
   <button class="bo" onclick="caucularHIP()">Calcular hipotenusa</button>
   <button class="bo" onclick="desenharTriangulo1()">Desenhar Triângulo</button>
   <br><br>
