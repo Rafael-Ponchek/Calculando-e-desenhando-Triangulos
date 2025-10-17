@@ -54,7 +54,6 @@ body{
             let co= parseFloat(document.getElementById("co").value);
             let hip= parseFloat(document.getElementById("hip").value);
             let altura = parseFloat(document.getElementById("altura").value);
-            co = co+altura;
             let sen = co/hip;
             let ansen = Math.asin(sen);
             let angulo = ansen*(180/Math.PI);
@@ -66,7 +65,11 @@ body{
                 alert("Você não colocou sua altura, mas o angulo é de: "+ angulo.toFixed(0)+ "°graus ou "+ sen.toFixed(3));
               }
               else{
-                alert("O angulo é de "+ angulo.toFixed(0)+ "°graus ou "+ sen.toFixed(3) );
+                co = co+altura;
+                sen = co/hip;
+                ansen = Math.asin(sen);
+                angulo = ansen*(180/Math.PI);
+                alert("O angulo é de "+ angulo.toFixed(0)+ angulo+"°graus ou "+ sen.toFixed(3) );
               }
             }
         }
@@ -86,6 +89,7 @@ body{
               }
               else{
                 co = co + altura
+                
               alert("A altura é de ≈ "+ co.toFixed(2)+ " m");
               }
             }
